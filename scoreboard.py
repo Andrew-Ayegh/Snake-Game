@@ -1,4 +1,5 @@
-from turtle import Turtle, Screen
+from turtle import Turtle
+
 
 class ScoreBoard(Turtle):
     
@@ -7,23 +8,27 @@ class ScoreBoard(Turtle):
         self.color('White')
         self.penup()
         self.score = 0
+        with open("data.txt") as data:
+            self.high_score = int(data.read())
         self.goto(0, 280)
         self.hideturtle()
         self.update_scoreboard()
     
     def update_scoreboard(self):
-        self.write(f"Score: {self.score} ", False, align='center', font=("Ariel", 14, "normal"))
-    
-    def add_score(self):
-        self.score += 1
+        """change the score board display whenever the snake collides with food"""
         self.clear()
+        self.write(f"Score: {self.score}   High Score: {self.high_score}", False, align='center', font=("Ariel", 14, "normal") )
+
+    def add_score(self):
+        """Adds the player score when snake collides with food"""
+        self.score += 1
         self.update_scoreboard()
     
-    def game_over(self):
-        self.goto(0,0)
-        self.write("Game Over.", False, align='center', font=("Ariel", 14, "normal"))
-        
-
-# x = ScoreBoard()
-# screen = Screen()
-# screen.exitonclick()
+    def reset(self):
+        """rest the score board and update the high score"""
+        if self.score > self.high_score:
+            self.high_score = self.score
+        self.score = 0
+        self.update_scoreboard()
+        with open("data.txt","w") as high_score:
+            high_score.write(str(self.high_score))
